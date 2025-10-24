@@ -1,0 +1,2747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduCar - Aprende de forma divertida para el examen teórico de manejo de Costa Rica">
+    <meta name="theme-color" content="#002B7F">
+    <title>EduCar - Tu Compañero de Estudio</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkVkdUNhciAtIEFwcmVuZGUgYSBNYW5lamFyIiwKICAic2hvcnRfbmFtZSI6ICJFZHVDYXIiLAogICJkZXNjcmlwdGlvbiI6ICJBcHJlbmRlIGRlIGZvcm1hIGRpdmVydGlkYSBwYXJhIGVsIGV4YW1lbiB0ZcOzcmljbyBkZSBtYW5lam8gZGUgQ29zdGEgUmljYSIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjRkZGRkZGIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMkI3RiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwuLi4iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #002B7F;
+            --primary-red: #CE1126;
+            --primary-white: #FFFFFF;
+            --bg-light: #F5F7FA;
+            --bg-dark: #1a1a2e;
+            --text-dark: #2D3748;
+            --text-light: #718096;
+            --success: #48BB78;
+            --warning: #ECC94B;
+            --danger: #F56565;
+            --info: #4299E1;
+            --shadow: 0 10px 30px rgba(0, 43, 127, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 43, 127, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo {
+            font-size: 6rem;
+            color: white;
+            margin-bottom: 2rem;
+            animation: bounceIn 1s;
+        }
+
+        .splash-title {
+            font-size: 3rem;
+            color: white;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s 0.3s both;
+        }
+
+        .splash-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s 0.6s both;
+        }
+
+        .splash-btn {
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            background: white;
+            color: var(--primary-blue);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            animation: fadeInUp 1s 0.9s both;
+        }
+
+        .splash-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .user-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-light);
+            border-radius: 20px;
+        }
+
+        .stat-icon {
+            color: var(--warning);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-red) 100%);
+            color: white;
+        }
+
+        .welcome-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .progress-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .progress-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-card-icon {
+            font-size: 2rem;
+        }
+
+        .progress-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-red));
+            transition: width 0.5s;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-red));
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-card h3 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .game-card p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .game-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 43, 127, 0.3);
+        }
+
+        /* Quiz Game */
+        .quiz-game {
+            display: none;
+        }
+
+        .quiz-game.active {
+            display: block;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .quiz-lives {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .heart {
+            color: var(--danger);
+            font-size: 1.5rem;
+        }
+
+        .heart.lost {
+            opacity: 0.3;
+        }
+
+        .quiz-question {
+            margin-bottom: 2rem;
+        }
+
+        .question-number {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .option:hover {
+            background: white;
+            border-color: var(--primary-blue);
+            transform: translateX(10px);
+        }
+
+        .option.selected {
+            border-color: var(--primary-blue);
+            background: rgba(0, 43, 127, 0.1);
+        }
+
+        .option.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option.incorrect {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--info);
+            color: white;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Memory Game */
+        .memory-game {
+            display: none;
+        }
+
+        .memory-game.active {
+            display: block;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: var(--shadow);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-size: 2rem;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            color: white;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: white;
+            flex-direction: column;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .card-back-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-back-text {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        /* Simulator Game */
+        .simulator-game {
+            display: none;
+        }
+
+        .simulator-game.active {
+            display: block;
+        }
+
+        .scenario-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .scenario-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        /* Association Game */
+        .association-game {
+            display: none;
+        }
+
+        .association-game.active {
+            display: block;
+        }
+
+        .association-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 2rem auto;
+        }
+
+        .association-column {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .association-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--bg-light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .association-item:hover {
+            transform: translateX(5px);
+            background: rgba(0, 43, 127, 0.1);
+        }
+
+        .association-item.selected {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .association-item.matched {
+            background: var(--success);
+            color: white;
+            cursor: default;
+        }
+
+        /* Study Library */
+        .study-library {
+            display: none;
+        }
+
+        .study-library.active {
+            display: block;
+        }
+
+        .library-search {
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--bg-light);
+            border-radius: 15px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .library-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chapter {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .chapter:last-child {
+            border-bottom: none;
+        }
+
+        .chapter-title {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chapter-content {
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-left: 2rem;
+        }
+
+        .chapter-content h4 {
+            color: var(--primary-red);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-content ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .chapter-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Profile/Stats */
+        .profile-stats {
+            display: none;
+        }
+
+        .profile-stats.active {
+            display: block;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0 auto 1rem;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, var(--warning), #f6ad55);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .achievement {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        /* Exam Simulator */
+        .exam-simulator {
+            display: none;
+        }
+
+        .exam-simulator.active {
+            display: block;
+        }
+
+        .exam-timer {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        /* Bottom Navigation (Mobile) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+            display: none;
+            justify-content: space-around;
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.5rem;
+        }
+
+        .bottom-nav-item span {
+            font-size: 0.75rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin-bottom: 80px;
+            }
+
+            .nav {
+                padding: 1rem;
+            }
+
+            .nav-brand {
+                font-size: 1.2rem;
+            }
+
+            .user-stats {
+                display: none;
+            }
+
+            .welcome-card h1 {
+                font-size: 1.8rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .association-container {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-nav {
+                display: flex;
+            }
+
+            .splash-title {
+                font-size: 2rem;
+            }
+
+            .splash-logo {
+                font-size: 4rem;
+            }
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            display: none;
+            animation: slideInRight 0.5s;
+            z-index: 1001;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            animation: slideInRight 0.5s;
+            z-index: 1002;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            border-left: 5px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 5px solid var(--danger);
+        }
+
+        .toast.info {
+            border-left: 5px solid var(--info);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">🚗</div>
+            <h2>Cargando EduCar...</h2>
+        </div>
+    </div>
+
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">🚗</div>
+        <h1 class="splash-title">EduCar</h1>
+        <p class="splash-subtitle">Tu compañero de estudio para el examen teórico</p>
+        <button class="splash-btn" onclick="startApp()">
+            <i class="fas fa-play"></i> Comenzar
+        </button>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi-slash"></i> Modo Offline
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="mainNav" style="display: none;">
+        <div class="nav-brand">
+            <i class="fas fa-car"></i>
+            <span>EduCar</span>
+        </div>
+        <div class="nav-user">
+            <div class="user-stats">
+                <div class="stat-item">
+                    <i class="fas fa-star stat-icon"></i>
+                    <span id="userXP">0 XP</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-fire stat-icon" style="color: var(--danger);"></i>
+                    <span id="userStreak">0 días</span>
+                </div>
+            </div>
+            <div class="user-avatar" onclick="showProfile()">
+                <span id="userInitial">U</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard -->
+        <section class="dashboard active" id="dashboard">
+            <div class="welcome-card">
+                <h1>¡Bienvenido de nuevo, <span id="userName">Estudiante</span>! 👋</h1>
+                <p>Continuemos tu camino hacia la licencia de conducir</p>
+            </div>
+
+            <div class="progress-overview">
+                <div class="progress-card">
+                    <div class="progress-card-header">
+                        <h3>Progreso General</h3>
+                        <i class="fas fa-chart-line progress-card-icon" style="color: var(--info);"></i>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="overallProgress" style="width: 0%"></div>
+                    </div>
+                    <p><span id="overallPercentage">0</span>% completado</p>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-card-header">
+                        <h3>Racha Actual</h3>
+                        <i class="fas fa-fire progress-card-icon" style="color: var(--danger);"></i>
+                    </div>
+                    <h2><span id="streakDays">0</span> días</h2>
+                    <p>¡Sigue así!</p>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-card-header">
+                        <h3>Nivel Actual</h3>
+                        <i class="fas fa-trophy progress-card-icon" style="color: var(--warning);"></i>
+                    </div>
+                    <h2 id="userLevel">Aprendiz</h2>
+                    <p><span id="levelXP">0</span>/1000 XP</p>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-card-header">
+                        <h3>Logros</h3>
+                        <i class="fas fa-medal progress-card-icon" style="color: var(--success);"></i>
+                    </div>
+                    <h2><span id="achievementCount">0</span>/20</h2>
+                    <p>Insignias desbloqueadas</p>
+                </div>
+            </div>
+
+            <h2 style="color: white; margin-bottom: 1.5rem; font-size: 2rem;">
+                <i class="fas fa-gamepad"></i> Juegos Interactivos
+            </h2>
+
+            <div class="games-grid">
+                <div class="game-card" onclick="startQuiz()">
+                    <i class="fas fa-question-circle game-icon" style="color: var(--info);"></i>
+                    <h3>Quiz Interactivo</h3>
+                    <p>Pon a prueba tus conocimientos con preguntas de opción múltiple sobre legislación y señales de tránsito</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-heart"></i> 3 vidas</span>
+                        <span class="game-stat"><i class="fas fa-star"></i> +50 XP</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Jugar Ahora
+                    </button>
+                </div>
+
+                <div class="game-card" onclick="startMemory()">
+                    <i class="fas fa-brain game-icon" style="color: var(--primary-red);"></i>
+                    <h3>Memoria de Señales</h3>
+                    <p>Encuentra las parejas de señales de tránsito y sus significados en este juego de memoria</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-clock"></i> Contrarreloj</span>
+                        <span class="game-stat"><i class="fas fa-star"></i> +30 XP</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Jugar Ahora
+                    </button>
+                </div>
+
+                <div class="game-card" onclick="startSimulator()">
+                    <i class="fas fa-road game-icon" style="color: var(--success);"></i>
+                    <h3>Simulador de Situaciones</h3>
+                    <p>Enfrenta escenarios reales de manejo y toma las decisiones correctas según la ley</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-gavel"></i> Basado en Ley 9078</span>
+                        <span class="game-stat"><i class="fas fa-star"></i> +70 XP</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Jugar Ahora
+                    </button>
+                </div>
+
+                <div class="game-card" onclick="startAssociation()">
+                    <i class="fas fa-link game-icon" style="color: var(--warning);"></i>
+                    <h3>Asociación Rápida</h3>
+                    <p>Conecta señales con significados e infracciones con consecuencias en tiempo récord</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-bolt"></i> Modo rápido</span>
+                        <span class="game-stat"><i class="fas fa-star"></i> +40 XP</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Jugar Ahora
+                    </button>
+                </div>
+
+                <div class="game-card" onclick="startExam()">
+                    <i class="fas fa-graduation-cap game-icon" style="color: var(--primary-blue);"></i>
+                    <h3>Examen Simulado</h3>
+                    <p>Realiza un examen completo tipo oficial para evaluar tu preparación real</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-clipboard-check"></i> 40 preguntas</span>
+                        <span class="game-stat"><i class="fas fa-star"></i> +100 XP</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Comenzar Examen
+                    </button>
+                </div>
+
+                <div class="game-card" onclick="showLibrary()">
+                    <i class="fas fa-book game-icon" style="color: #9F7AEA;"></i>
+                    <h3>Biblioteca de Estudio</h3>
+                    <p>Accede a todo el contenido educativo: legislación, señales y normativas completas</p>
+                    <div class="game-stats">
+                        <span class="game-stat"><i class="fas fa-bookmark"></i> 10 capítulos</span>
+                        <span class="game-stat"><i class="fas fa-search"></i> Buscador</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Estudiar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Game -->
+        <section class="quiz-game" id="quizGame">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <div class="quiz-lives" id="quizLives">
+                        <i class="fas fa-heart heart"></i>
+                        <i class="fas fa-heart heart"></i>
+                        <i class="fas fa-heart heart"></i>
+                    </div>
+                    <div style="font-weight: 600; color: var(--primary-blue);">
+                        <i class="fas fa-star"></i> <span id="quizScore">0</span> pts
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-number" id="questionNumber">Pregunta 1 de 10</div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+
+                <button class="btn btn-primary" id="nextQuestionBtn" style="width: 100%; display: none;" onclick="nextQuestion()">
+                    Siguiente Pregunta <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Memory Game -->
+        <section class="memory-game" id="memoryGame">
+            <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: var(--shadow);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <div style="display: flex; gap: 2rem;">
+                        <div style="font-weight: 600; color: var(--primary-blue);">
+                            <i class="fas fa-clock"></i> <span id="memoryTime">0:00</span>
+                        </div>
+                        <div style="font-weight: 600; color: var(--primary-red);">
+                            <i class="fas fa-hand-pointer"></i> <span id="memoryMoves">0</span> movimientos
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="text-align: center; color: var(--text-dark); margin-bottom: 2rem;">
+                    Encuentra las parejas de señales
+                </h2>
+
+                <div class="memory-grid" id="memoryGrid"></div>
+            </div>
+        </section>
+
+        <!-- Simulator Game -->
+        <section class="simulator-game" id="simulatorGame">
+            <div class="scenario-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <div style="font-weight: 600; color: var(--primary-blue);">
+                        Escenario <span id="scenarioNumber">1</span> de 5
+                    </div>
+                </div>
+
+                <div class="scenario-image" id="scenarioImage">
+                    <i class="fas fa-car"></i>
+                </div>
+
+                <h3 style="color: var(--text-dark); margin-bottom: 1rem; font-size: 1.5rem;" id="scenarioTitle"></h3>
+                <p style="color: var(--text-light); margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;" id="scenarioDescription"></p>
+
+                <div class="quiz-options" id="scenarioOptions"></div>
+                <div class="explanation" id="scenarioExplanation"></div>
+
+                <button class="btn btn-primary" id="nextScenarioBtn" style="width: 100%; display: none;" onclick="nextScenario()">
+                    Siguiente Escenario <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Association Game -->
+        <section class="association-game" id="associationGame">
+            <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <div style="display: flex; gap: 2rem;">
+                        <div style="font-weight: 600; color: var(--primary-blue);">
+                            <i class="fas fa-clock"></i> <span id="associationTime">60</span>s
+                        </div>
+                        <div style="font-weight: 600; color: var(--success);">
+                            <i class="fas fa-check"></i> <span id="associationScore">0</span> correctas
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="text-align: center; color: white; margin-bottom: 2rem;">
+                Conecta las señales con sus significados
+            </h2>
+
+            <div class="association-container">
+                <div class="association-column">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary-blue);">Señales/Infracciones</h3>
+                    <div id="associationLeft"></div>
+                </div>
+                <div class="association-column">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary-red);">Significados/Consecuencias</h3>
+                    <div id="associationRight"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Library -->
+        <section class="study-library" id="studyLibrary">
+            <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: var(--shadow); margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <h2 style="color: var(--primary-blue);">
+                        <i class="fas fa-book"></i> Biblioteca de Estudio
+                    </h2>
+                </div>
+                
+                <div class="library-search">
+                    <input type="text" class="search-input" id="librarySearch" placeholder="Buscar en la biblioteca..." onkeyup="searchLibrary()">
+                </div>
+            </div>
+
+            <div class="library-content" id="libraryContent"></div>
+        </section>
+
+        <!-- Profile/Stats -->
+        <section class="profile-stats" id="profileStats">
+            <div class="profile-header">
+                <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white; margin-bottom: 1rem;">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <div class="profile-avatar-large">
+                    <span id="profileInitial">U</span>
+                </div>
+                <h2 id="profileName">Usuario</h2>
+                <div class="level-badge">
+                    <i class="fas fa-trophy"></i> <span id="profileLevel">Nivel: Aprendiz</span>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-light);">
+                    <span id="profileXP">0</span> XP • <span id="profileStreak">0</span> días de racha
+                </p>
+            </div>
+
+            <h3 style="color: white; margin: 2rem 0 1rem; font-size: 1.8rem;">
+                <i class="fas fa-medal"></i> Logros Desbloqueados
+            </h3>
+
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </section>
+
+        <!-- Exam Simulator -->
+        <section class="exam-simulator" id="examSimulator">
+            <div class="exam-timer" id="examTimer">
+                <i class="fas fa-clock"></i> <span id="examTime">40:00</span>
+            </div>
+
+            <div class="quiz-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <button class="btn" onclick="backToDashboard()" style="background: var(--text-light); color: white;">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <h3 style="color: var(--primary-blue);">Examen Simulado Oficial</h3>
+                </div>
+
+                <div class="quiz-question">
+                    <div class="question-number" id="examQuestionNumber">Pregunta 1 de 40</div>
+                    <div class="question-text" id="examQuestionText"></div>
+                    <div class="quiz-options" id="examOptions"></div>
+                </div>
+
+                <button class="btn btn-primary" id="nextExamBtn" style="width: 100%;" onclick="nextExamQuestion()">
+                    Siguiente Pregunta <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item active" onclick="showSection('dashboard')">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showSection('studyLibrary')">
+            <i class="fas fa-book"></i>
+            <span>Estudiar</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showSection('profileStats')">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA ====================
+        const quizQuestions = [
+            {
+                question: "¿En qué año se promulgó la Ley 9078 de Tránsito vigente en Costa Rica?",
+                options: ["2010", "2012", "2014", "2016"],
+                correct: 1,
+                explanation: "La Ley 9078 - Ley de Tránsito por Vías Públicas Terrestres y Seguridad Vial fue promulgada el 26 de octubre de 2012 y es la ley vigente actualmente.",
+                category: "Legislación"
+            },
+            {
+                question: "¿Cuántos puntos acumulados causan la suspensión de licencia para un conductor común?",
+                options: ["3 puntos", "6 puntos", "12 puntos", "15 puntos"],
+                correct: 1,
+                explanation: "Según los artículos 143 y 144 de la Ley 9078, un conductor común recibe suspensión de 1 año al acumular 6 puntos. Para conductores novatos son 5 puntos, y cualquier conductor con 12 puntos también recibe suspensión.",
+                category: "Sistema de Puntos"
+            },
+            {
+                question: "¿Cuál es la velocidad máxima permitida en autopistas según la Ley 9078?",
+                options: ["100 km/h", "110 km/h", "120 km/h", "130 km/h"],
+                correct: 2,
+                explanation: "Según el artículo 98, la velocidad máxima en autopista es de 120 km/h y la mínima es de 50 km/h. Los vehículos de emergencia debidamente identificados están exceptuados.",
+                category: "Velocidades"
+            },
+            {
+                question: "¿A qué edad mínima se puede obtener la licencia de conducir en Costa Rica (excepto A1)?",
+                options: ["16 años", "17 años", "18 años", "21 años"],
+                correct: 2,
+                explanation: "Según los artículos 83 y 84, se debe ser mayor de 18 años para obtener el permiso temporal de aprendizaje y la licencia de conducir, excepto para la categoría A1.",
+                category: "Requisitos Legales"
+            },
+            {
+                question: "¿Cuál es la velocidad máxima en zonas urbanas?",
+                options: ["40 km/h", "50 km/h", "60 km/h", "70 km/h"],
+                correct: 1,
+                explanation: "Según el Art-98, en lugares urbanos la velocidad máxima es de 50 km/h. En vías cerca de planteles educativos se reduce a 25 km/h.",
+                category: "Velocidades"
+            },
+            {
+                question: "Los menores de 12 años que midan menos de 1,45 m deben viajar en:",
+                options: ["El asiento delantero", "Cualquier asiento", "El asiento trasero con sistema de retención infantil", "De pie"],
+                correct: 2,
+                explanation: "Según el Art-94 sobre cinturones y dispositivos de seguridad, los menores de 12 años que midan menos de 1,45 m deben viajar en el asiento trasero en un sistema de retención infantil.",
+                category: "Seguridad"
+            },
+            {
+                question: "¿Cuáles son los tres elementos de la Trilogía Vial?",
+                options: ["Conductor, pasajero y vehículo", "Factor humano, factor vía y factor vehicular", "Semáforo, señal y conductor", "Velocidad, distancia y tiempo"],
+                correct: 1,
+                explanation: "La Trilogía Vial está compuesta por: 1) Factor humano, 2) Factor vía y su entorno, y 3) Factor vehicular. Estos tres elementos son fundamentales en la conducción.",
+                category: "Conceptos Básicos"
+            },
+            {
+                question: "Las líneas amarillas en el señalamiento horizontal indican:",
+                options: ["Tránsito en el mismo sentido", "Separación de carriles con sentidos opuestos", "Zonas de estacionamiento", "Carriles exclusivos"],
+                correct: 1,
+                explanation: "Las líneas amarillas significan que se separan carriles con sentidos de circulación opuesto. Las líneas blancas indican que el tránsito se mueve en un mismo sentido.",
+                category: "Señalamiento"
+            },
+            {
+                question: "¿Cuándo deben mantener las luces encendidas las motocicletas y bicimotos?",
+                options: ["Solo de noche", "De 6pm a 6am", "24 horas", "Solo en días nublados"],
+                correct: 2,
+                explanation: "Según el Art-103, las motos y bicimotos deberán mantener las luces encendidas las 24 horas del día.",
+                category: "Uso de Luces"
+            },
+            {
+                question: "¿Cuántos artículos tiene la Ley 9078?",
+                options: ["200 artículos", "252 artículos", "300 artículos", "150 artículos"],
+                correct: 1,
+                explanation: "La Ley 9078 cuenta con 252 artículos y 23 transitorios que regulan el tránsito por vías públicas terrestres y la seguridad vial en Costa Rica.",
+                category: "Legislación"
+            },
+            {
+                question: "¿Cuál es el orden de prioridad de paso correcto?",
+                options: ["Semáforo, tren, autoridad", "Tren, autoridad, vehículo de emergencia", "Autoridad, semáforo, señales de alto", "Vehículo de emergencia, tren, semáforo"],
+                correct: 1,
+                explanation: "El orden correcto de prioridad es: 1-Tren, 2-Autoridad, 3-Vehículo de emergencia, 4-Semáforo, 5-Señales de Alto, 6-Vías principales, 7-Avenidas y calles, 8-Ley de mano derecha, 9-Cortesía.",
+                category: "Prioridad de Paso"
+            },
+            {
+                question: "¿Qué es el hidroplanamiento?",
+                options: ["Un tipo de señal vial", "Pérdida de tracción por agua en la vía", "Un sistema de frenos", "Una técnica de conducción"],
+                correct: 1,
+                explanation: "El hidroplanamiento ocurre cuando se forma una capa de agua entre las llantas y el pavimento, causando pérdida de tracción y control del vehículo.",
+                category: "Seguridad Vial"
+            },
+            {
+                question: "El catalizador del vehículo sirve para:",
+                options: ["Aumentar la velocidad", "Convertir gases tóxicos en menos contaminantes", "Mejorar el consumo de combustible", "Enfriar el motor"],
+                correct: 1,
+                explanation: "El catalizador convierte los gases del escape del motor en gases menos contaminantes. Bajo ninguna circunstancia debe ser eliminado.",
+                category: "Medio Ambiente"
+            },
+            {
+                question: "¿Cuál es la velocidad máxima en vías cerca de planteles educativos?",
+                options: ["25 km/h", "30 km/h", "40 km/h", "50 km/h"],
+                correct: 0,
+                explanation: "Según el Art-98, en vías cerca de planteles educativos la velocidad máxima es de 25 km/h para garantizar la seguridad de los estudiantes.",
+                category: "Velocidades"
+            },
+            {
+                question: "¿Qué debe hacer un conductor novato al acumular 5 puntos?",
+                options: ["Pagar una multa", "Suspensión de licencia por 1 año", "Asistir a un curso", "Nada, puede seguir conduciendo"],
+                correct: 1,
+                explanation: "Un conductor novato recibe suspensión de 1 año al acumular 5 o más puntos, y debe realizar un curso de sensibilización y reeducación vial para renovar la licencia.",
+                category: "Sistema de Puntos"
+            }
+        ];
+
+        const scenarios = [
+            {
+                title: "Intersección sin señalización",
+                description: "Llegas a una intersección sin semáforo ni señales de ALTO. Otro vehículo se aproxima por tu derecha al mismo tiempo. ¿Qué debes hacer?",
+                options: [
+                    "Acelerar para pasar primero",
+                    "Ceder el paso al vehículo de la derecha",
+                    "Tocar la bocina y continuar",
+                    "Detenerme completamente sin importar nada"
+                ],
+                correct: 1,
+                explanation: "Según la Ley de mano derecha (9° en prioridad de paso), cuando dos vehículos llegan simultáneamente a una intersección sin señalización, tiene prioridad el que viene por la derecha."
+            },
+            {
+                title: "Vehículo de emergencia",
+                description: "Vas conduciendo por una autopista y escuchas la sirena de una ambulancia detrás de ti. ¿Cuál es la acción correcta?",
+                options: [
+                    "Mantener mi velocidad y carril",
+                    "Acelerar para no obstruir",
+                    "Orillarse y ceder el paso inmediatamente",
+                    "Detenerme en el carril actual"
+                ],
+                correct: 2,
+                explanation: "Según el Art-93 y la prioridad de paso (3° posición), debes dar prioridad inmediata a los vehículos de emergencia, orillándote de manera segura para permitir su paso."
+            },
+            {
+                title: "Conducción nocturna",
+                description: "Es de noche y viene un vehículo en sentido contrario. Tienes las luces altas encendidas. ¿Qué debes hacer?",
+                options: [
+                    "Mantener las luces altas",
+                    "Cambiar a luces bajas",
+                    "Apagar las luces momentáneamente",
+                    "Tocar la bocina"
+                ],
+                correct: 1,
+                explanation: "Según el Art-103, debes usar luces altas solo cuando NO circulen vehículos en sentido contrario. Debes cambiar a luces bajas para no deslumbrar al otro conductor."
+            },
+            {
+                title: "Sistema de retención infantil",
+                description: "Vas a transportar a tu sobrino de 8 años que mide 1,35 m. ¿Dónde debe viajar?",
+                options: [
+                    "En el asiento delantero con cinturón",
+                    "En el asiento trasero sin restricciones",
+                    "En el asiento trasero con sistema de retención infantil",
+                    "Puede ir de pie atrás"
+                ],
+                correct: 2,
+                explanation: "Según el Art-94, los menores de 12 años que midan menos de 1,45 m deben viajar en el asiento trasero en un sistema de retención infantil apropiado."
+            },
+            {
+                title: "Límites de velocidad",
+                description: "Circulas por una zona urbana sin señalización de velocidad visible. ¿Cuál es la velocidad máxima permitida?",
+                options: [
+                    "40 km/h",
+                    "50 km/h",
+                    "60 km/h",
+                    "70 km/h"
+                ],
+                correct: 1,
+                explanation: "Según el Art-98, en lugares urbanos la velocidad máxima es de 50 km/h cuando no hay señalización específica. Cerca de escuelas se reduce a 25 km/h."
+            }
+        ];
+
+        const memoryCards = [
+            { id: 1, icon: "🛑", text: "ALTO", type: "signal" },
+            { id: 1, icon: "🛑", text: "Detención obligatoria", type: "meaning" },
+            { id: 2, icon: "⚠️", text: "CEDA", type: "signal" },
+            { id: 2, icon: "⚠️", text: "Ceder el paso", type: "meaning" },
+            { id: 3, icon: "🚫", text: "Prohibido", type: "signal" },
+            { id: 3, icon: "🚫", text: "No se permite", type: "meaning" },
+            { id: 4, icon: "➡️", text: "Dirección", type: "signal" },
+            { id: 4, icon: "➡️", text: "Sentido obligatorio", type: "meaning" },
+            { id: 5, icon: "🏫", text: "Escuela", type: "signal" },
+            { id: 5, icon: "🏫", text: "Zona escolar 25 km/h", type: "meaning" },
+            { id: 6, icon: "🚸", text: "Peatones", type: "signal" },
+            { id: 6, icon: "🚸", text: "Cruce peatonal", type: "meaning" }
+        ];
+
+        const associations = [
+            { left: "Exceso de velocidad en autopista", right: "Sanción Tipo A", id: 1 },
+            { left: "Conducir sin licencia", right: "Retiro del vehículo", id: 2 },
+            { left: "No usar cinturón de seguridad", right: "Sanción + puntos", id: 3 },
+            { left: "Niño sin sistema de retención", right: "Multa Art-94", id: 4 },
+            { left: "Luces de neblina sin necesidad", right: "Infracción Art-103", id: 5 }
+        ];
+
+        const chapters = [
+            {
+                title: "Historia del Tránsito en Costa Rica",
+                content: `
+                    <h4>Cronología del Tránsito Costarricense</h4>
+                    <ul>
+                        <li><strong>1912:</strong> Primer automóvil en Costa Rica</li>
+                        <li><strong>1920:</strong> Código de la Circulación</li>
+                        <li><strong>1970s:</strong> Aumento de vehículos y accidentes</li>
+                        <li><strong>27 de octubre de 1976:</strong> Ley 5930 - Primera Ley de Tránsito</li>
+                        <li><strong>24 de mayo de 1979:</strong> Ley 6324 - Ley de Administración Vial</li>
+                        <li><strong>1980s:</strong> "Aumento explosivo" de vehículos y reformas</li>
+                        <li><strong>Ley 7331:</strong> Ley de Tránsito por Vías Públicas Terrestres</li>
+                        <li><strong>26 de octubre de 2012:</strong> Ley 9078 - LEY VIGENTE ACTUAL</li>
+                    </ul>
+                    <p>La Ley 9078 es la "Ley de Tránsito por Vías Públicas Terrestres y Seguridad Vial" que rige actualmente en Costa Rica.</p>
+                `
+            },
+            {
+                title: "Legislación de Tránsito - Ley 9078",
+                content: `
+                    <h4>Características de la Ley 9078</h4>
+                    <ul>
+                        <li><strong>Promulgación:</strong> 26 de octubre de 2012</li>
+                        <li><strong>Artículos:</strong> 252 artículos + 23 transitorios</li>
+                        <li><strong>Objetivo:</strong> Regular el tránsito y la seguridad vial</li>
+                    </ul>
+                    
+                    <h4>Sistema de Sanciones</h4>
+                    <p>Las sanciones se clasifican en 5 tipos: A, B, C, D, E</p>
+                    <ul>
+                        <li><strong>Tipo A:</strong> Infracciones más graves (Art 143)</li>
+                        <li><strong>Tipos B-E:</strong> Se suman consecutivamente al Art 143</li>
+                    </ul>
+                    
+                    <h4>Sistema de Acumulación de Puntos</h4>
+                    <ul>
+                        <li><strong>Conductor novato:</strong> 5 o más puntos = suspensión de 1 año</li>
+                        <li><strong>Conductor común:</strong> 6 puntos = suspensión de 1 año</li>
+                        <li><strong>Cualquier conductor:</strong> 12 puntos = suspensión de 1 año</li>
+                        <li><strong>Requisito:</strong> Debe realizar curso de sensibilización y reeducación vial para renovar</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Requisitos de Vehículos y Licencias",
+                content: `
+                    <h4>Requisitos para Circular (Art-32)</h4>
+                    <ul>
+                        <li>Volante del lado izquierdo</li>
+                        <li>Parabrisas en buen estado</li>
+                        <li>Luces funcionales</li>
+                        <li>Bocina operativa</li>
+                        <li>Parachoques</li>
+                        <li>Sistema de frenos eficiente</li>
+                        <li>Escobillas limpiaparabrisas</li>
+                    </ul>
+                    
+                    <h4>Requisitos Específicos para Automóviles (Art-33)</h4>
+                    <ul>
+                        <li>Apoya cabezas</li>
+                        <li>Llantas con profundidad adecuada (no deben alcanzar el testigo)</li>
+                    </ul>
+                    
+                    <h4>Requisitos para Licencia de Conducir (Art-84)</h4>
+                    <ul>
+                        <li>NO haber cometido delitos tipificados</li>
+                        <li>Ser mayor de 18 años (excepto categoría A1)</li>
+                        <li>Saber leer y escribir</li>
+                        <li>Presentar dictamen médico</li>
+                        <li>Aprobar curso básico de educación vial</li>
+                        <li>Aprobar examen teórico y práctico</li>
+                        <li>Tener póliza de seguro (Art-36)</li>
+                    </ul>
+                    
+                    <p><strong>Nota:</strong> Se exceptúan del examen práctico las licencias tipo C-1 y las tipo E-1 y E-2</p>
+                `
+            },
+            {
+                title: "Reglas Generales de Circulación",
+                content: `
+                    <h4>Reglas Fundamentales (Art-93)</h4>
+                    <ul>
+                        <li>Acatar inmediatamente las indicaciones de oficiales de tránsito</li>
+                        <li>Evitar situaciones que impidan la libre circulación</li>
+                        <li>Observar y cumplir con las señales de tránsito</li>
+                        <li>Dar prioridad de paso a vehículos de emergencia</li>
+                    </ul>
+                    
+                    <h4>Límites de Velocidad (Art-98)</h4>
+                    <ul>
+                        <li><strong>Autopista:</strong> Mínima 50 km/h - Máxima 120 km/h</li>
+                        <li><strong>Zona urbana:</strong> Máxima 50 km/h</li>
+                        <li><strong>Cerca de escuelas:</strong> Máxima 25 km/h</li>
+                        <li><strong>Sin demarcación:</strong> Máxima 60 km/h</li>
+                    </ul>
+                    <p><em>*Vehículos de emergencia debidamente identificados están exceptuados</em></p>
+                    
+                    <h4>Uso de Luces (Art-103)</h4>
+                    <ul>
+                        <li>Usar luces de 6pm a 6am o cuando el clima lo requiera</li>
+                        <li>Luces altas solo cuando NO circulen vehículos en sentido contrario</li>
+                        <li><strong>Motos y bicimotos:</strong> Luces encendidas 24 horas</li>
+                        <li>Luces de neblina solo cuando condiciones climatológicas lo ameriten</li>
+                    </ul>
+                    
+                    <h4>Cinturones de Seguridad (Art-94)</h4>
+                    <ul>
+                        <li>Uso obligatorio para conductor y pasajeros</li>
+                        <li>Menores de 12 años que midan menos de 1,45 m: asiento trasero con sistema de retención infantil</li>
+                        <li>Vehículos de transporte público están exceptuados</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Señalamiento Vial",
+                content: `
+                    <h4>Tipos de Señalamiento</h4>
+                    <ul>
+                        <li><strong>Vertical:</strong> Señales en postes
+                            <ul>
+                                <li>Reglamentación: Indican obligaciones y prohibiciones</li>
+                                <li>Prevención: Advierten peligros</li>
+                                <li>Información: Orientan al conductor</li>
+                            </ul>
+                        </li>
+                        <li><strong>Horizontal:</strong> Marcas en la calzada
+                            <ul>
+                                <li>Líneas amarillas: Separan carriles con sentidos opuestos</li>
+                                <li>Líneas blancas: Tránsito en mismo sentido</li>
+                            </ul>
+                        </li>
+                        <li><strong>Luminoso:</strong> Semáforos</li>
+                        <li><strong>Sonoro:</strong> Alarmas y sirenas</li>
+                        <li><strong>Manual:</strong> Señales de agentes de tránsito</li>
+                    </ul>
+                    
+                    <h4>Tipos de Líneas Horizontales</h4>
+                    <ul>
+                        <li><strong>Línea de barrera (continua):</strong> Color amarillo, no se puede cruzar</li>
+                        <li><strong>Línea de vía:</strong> Blanca (continua y discontinua)</li>
+                        <li><strong>Línea de borde:</strong> Blanca</li>
+                        <li><strong>Línea de centro:</strong> Amarilla discontinua</li>
+                        <li><strong>Captaluces (ojos de gato):</strong> Reflectores en la vía</li>
+                    </ul>
+                    
+                    <h4>Zonas Especiales</h4>
+                    <ul>
+                        <li>Zonas de paso peatonal</li>
+                        <li>Zonas de seguridad</li>
+                        <li>Carriles exclusivos para transporte público</li>
+                        <li>Carriles exclusivos para giros izquierdos</li>
+                        <li>Cajón o caja amarilla</li>
+                        <li>Carril reversible</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Prioridad de Paso",
+                content: `
+                    <h4>Orden de Prioridad (del 1° al 9°)</h4>
+                    <ol>
+                        <li><strong>Tren:</strong> Máxima prioridad absoluta</li>
+                        <li><strong>Autoridad:</strong> Policía y agentes de tránsito</li>
+                        <li><strong>Vehículo de emergencia:</strong> Ambulancia, bomberos, policía con sirena</li>
+                        <li><strong>Semáforo:</strong> Luces de control vehicular</li>
+                        <li><strong>Señales de ALTO:</strong> Octágonos rojos</li>
+                        <li><strong>Vías principales:</strong> Tienen prioridad sobre secundarias</li>
+                        <li><strong>Avenidas y calles:</strong> Las avenidas tienen prioridad</li>
+                        <li><strong>Ley de mano derecha:</strong> Prioridad al vehículo de la derecha</li>
+                        <li><strong>Cortesía y comunicación:</strong> Buenos modales viales</li>
+                    </ol>
+                    
+                    <p><strong>Importante:</strong> Siempre debes ceder el paso a vehículos de emergencia con sirena activada, orillándote de manera segura.</p>
+                `
+            },
+            {
+                title: "Trilogía Vial y Factor Humano",
+                content: `
+                    <h4>Los Tres Elementos de la Conducción</h4>
+                    <ol>
+                        <li><strong>Factor Humano:</strong> El conductor
+                            <ul>
+                                <li>Conocimientos técnicos y sociales</li>
+                                <li>Actitud y conciencia</li>
+                                <li>Valores: solidaridad, tolerancia, cortesía, respeto</li>
+                            </ul>
+                        </li>
+                        <li><strong>Factor Vía y su Entorno:</strong> El camino
+                            <ul>
+                                <li>Estado del pavimento</li>
+                                <li>Señalización</li>
+                                <li>Condiciones climáticas</li>
+                            </ul>
+                        </li>
+                        <li><strong>Factor Vehicular:</strong> El vehículo
+                            <ul>
+                                <li>Estado mecánico</li>
+                                <li>Sistemas de seguridad</li>
+                                <li>Mantenimiento adecuado</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <h4>Procesos de la Conducción</h4>
+                    <ol>
+                        <li><strong>Percepción:</strong> Captar información con los sentidos (vista, oído, tacto, olfato)</li>
+                        <li><strong>Intelección:</strong> Interpretar los estímulos según conocimientos y experiencia</li>
+                        <li><strong>Volición:</strong> Reaccionar y tomar decisiones en el manejo</li>
+                    </ol>
+                    
+                    <h4>Condiciones para ser Buen Conductor</h4>
+                    <ul>
+                        <li>Saber maniobrar el vehículo correctamente</li>
+                        <li>Tener actitud, conciencia y postura adecuada</li>
+                        <li>Conocer la Ley de Tránsito vigente</li>
+                        <li>Tener nociones elementales de mecánica automotriz</li>
+                        <li>Ejercer valores sociales en la vía</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Sistemas del Vehículo",
+                content: `
+                    <h4>9 Sistemas Fundamentales</h4>
+                    <ol>
+                        <li><strong>Sistema de Dirección:</strong> Permite dirigir el vehículo con menor esfuerzo</li>
+                        <li><strong>Sistema de Frenos:</strong> Aminora la marcha y detiene el vehículo</li>
+                        <li><strong>Sistema de Suspensión y Amortiguación:</strong> Proporciona comodidad y absorbe impactos</li>
+                        <li><strong>Sistema de Alimentación:</strong> Suministra energía (gasolina, diésel, electricidad)</li>
+                        <li><strong>Sistema de Escape:</strong> Expulsa los gases de combustión</li>
+                        <li><strong>Sistema Eléctrico:</strong> Genera corriente para luces y accesorios</li>
+                        <li><strong>Sistema de Lubricación:</strong> Evita el roce y desgaste de piezas</li>
+                        <li><strong>Sistema de Embrague:</strong> Permite cambios de velocidad</li>
+                        <li><strong>Sistema de Enfriamiento:</strong> Mantiene la temperatura ideal del motor</li>
+                    </ol>
+                    
+                    <h4>Mantenimiento Preventivo</h4>
+                    <ul>
+                        <li>Cambio de aceite a tiempo</li>
+                        <li>Revisión de frenos regularmente</li>
+                        <li>Control de presión de neumáticos</li>
+                        <li>Verificación de luces</li>
+                        <li>Inspección de niveles de fluidos</li>
+                        <li>Afinación del motor</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Medio Ambiente y Conducción Eficiente",
+                content: `
+                    <h4>Contaminantes del Aire</h4>
+                    <ol>
+                        <li><strong>Dióxido de Azufre:</strong> Causa lluvia ácida y daños respiratorios/cardiovasculares</li>
+                        <li><strong>Monóxido de Carbono:</strong> Daña sistema nervioso y cardiovascular</li>
+                        <li><strong>Dióxido de Carbono:</strong> Provoca bronquitis crónica y alergias</li>
+                        <li><strong>Óxido de Nitrógeno:</strong> Daña capa de ozono, lluvia ácida, problemas respiratorios</li>
+                    </ol>
+                    
+                    <h4>El Catalizador</h4>
+                    <ul>
+                        <li>Convierte gases tóxicos del escape en gases menos contaminantes</li>
+                        <li><strong>PROHIBIDO eliminarlo bajo ninguna circunstancia</strong></li>
+                        <li>Fundamental para reducir emisiones</li>
+                    </ul>
+                    
+                    <h4>Conducción Técnica Económica Eficiente</h4>
+                    <p>Técnicas para ahorrar combustible y reducir contaminación:</p>
+                    <ul>
+                        <li>Cambio de aceite a tiempo</li>
+                        <li>Afinar el motor regularmente</li>
+                        <li>Mantener presión adecuada en neumáticos</li>
+                        <li>Revisar desgaste de llantas</li>
+                        <li>Planificar las rutas de viaje</li>
+                        <li>Evitar frenados repentinos</li>
+                        <li>No mantener pie en el clutch innecesariamente</li>
+                        <li>Usar marchas correctas</li>
+                    </ul>
+                    
+                    <p><strong>Dato importante:</strong> Un motor regulado ahorra hasta 9% de emisiones tóxicas. Los buenos hábitos pueden reducir consumo de combustible del 10% al 30%.</p>
+                `
+            },
+            {
+                title: "Conducción de Motocicletas",
+                content: `
+                    <h4>Preparativos para Conducir Motocicleta</h4>
+                    <ol>
+                        <li><strong>Usar ropa adecuada y accesorios:</strong>
+                            <ul>
+                                <li>Casco certificado (obligatorio)</li>
+                                <li>Ropa protectora</li>
+                                <li>Guantes</li>
+                                <li>Botas adecuadas</li>
+                            </ul>
+                        </li>
+                        <li><strong>Familiarizarse con la motocicleta:</strong>
+                            <ul>
+                                <li>Conocer todos los controles</li>
+                                <li>La moto debe quedar a tu medida</li>
+                                <li>Los dos pies deben llegar al suelo</li>
+                            </ul>
+                        </li>
+                        <li><strong>Revisar la motocicleta antes de usar:</strong>
+                            <ul>
+                                <li>Frenos</li>
+                                <li>Luces (deben estar encendidas 24h)</li>
+                                <li>Espejos</li>
+                                <li>Presión de llantas</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <h4>Consideraciones Especiales</h4>
+                    <ul>
+                        <li>Relación más directa con el entorno (mayor vulnerabilidad)</li>
+                        <li>Se puede volcar fácilmente</li>
+                        <li>Condiciones climáticas afectan más la conducción</li>
+                        <li><strong>Luces encendidas 24 horas (obligatorio Art-103)</strong></li>
+                    </ul>
+                    
+                    <h4>Motociclismo en Grupo</h4>
+                    <ul>
+                        <li>Ubicar principiantes adelante</li>
+                        <li>Ir al ritmo de los más lentos</li>
+                        <li>Conocer la ruta previamente</li>
+                        <li>Mantener distancia de seguridad</li>
+                        <li>NO formar parejas lado a lado</li>
+                        <li>Usar formación escalonada</li>
+                        <li>Mantener grupos pequeños</li>
+                    </ul>
+                    
+                    <h4>Vehículos Eléctricos</h4>
+                    <ul>
+                        <li>Motocicletas eléctricas: transmisión en rueda trasera</li>
+                        <li>Triciclos: transmisión por cadena o faja</li>
+                    </ul>
+                `
+            }
+        ];
+
+        const achievements = [
+            { icon: "🎓", title: "Primera Lección", description: "Completa tu primer juego", unlocked: false },
+            { icon: "🔥", title: "Racha de Fuego", description: "Estudia 7 días consecutivos", unlocked: false },
+            { icon: "⭐", title: "Estudiante Estrella", description: "Alcanza 1000 XP", unlocked: false },
+            { icon: "🏆", title: "Maestro del Quiz", description: "Responde 50 preguntas correctamente", unlocked: false },
+            { icon: "🧠", title: "Memoria Perfecta", description: "Completa el juego de memoria sin errores", unlocked: false },
+            { icon: "🎯", title: "Precisión Total", description: "10 respuestas correctas seguidas", unlocked: false },
+            { icon: "📚", title: "Biblioteca Completa", description: "Lee todos los capítulos", unlocked: false },
+            { icon: "✅", title: "Primer Examen", description: "Completa tu primer examen simulado", unlocked: false },
+            { icon: "💯", title: "Puntuación Perfecta", description: "Obtén 100% en un examen", unlocked: false },
+            { icon: "🚗", title: "Listo para Manejar", description: "Completa todos los módulos", unlocked: false },
+            { icon: "⚡", title: "Rayo Asociador", description: "Completa asociación en menos de 30s", unlocked: false },
+            { icon: "🎮", title: "Jugador Completo", description: "Juega todos los juegos", unlocked: false }
+        ];
+
+        // ==================== STATE ====================
+        let userData = {
+            name: "Estudiante",
+            xp: 0,
+            level: "Aprendiz",
+            streak: 0,
+            achievements: [],
+            gamesPlayed: [],
+            lastPlayed: null,
+            quizProgress: 0,
+            examsPassed: 0
+        };
+
+        let currentQuizIndex = 0;
+        let currentLives = 3;
+        let currentScore = 0;
+        let memoryFlipped = [];
+        let memoryMatched = [];
+        let memoryMoves = 0;
+        let memoryTimer = 0;
+        let memoryInterval = null;
+        let currentScenarioIndex = 0;
+        let scenarioScore = 0;
+        let associationSelected = { left: null, right: null };
+        let associationMatched = [];
+        let associationScore = 0;
+        let associationTimeLeft = 60;
+        let associationInterval = null;
+        let currentExamIndex = 0;
+        let examAnswers = [];
+        let examTimeLeft = 2400; // 40 minutos
+        let examInterval = null;
+
+        // ==================== INITIALIZATION ====================
+        function init() {
+            loadUserData();
+            checkOnlineStatus();
+            updateUI();
+            
+            // Hide loader after 1 second
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(err => {
+                    console.log('Service Worker registration failed:', err);
+                });
+            }
+
+            // Check streak
+            updateStreak();
+        }
+
+        function startApp() {
+            document.getElementById('splashScreen').classList.add('hidden');
+            document.getElementById('mainNav').style.display = 'flex';
+            showToast('¡Bienvenido a EduCar! 🚗', 'success');
+        }
+
+        function loadUserData() {
+            const saved = localStorage.getItem('educarUserData');
+            if (saved) {
+                userData = JSON.parse(saved);
+                updateUI();
+            } else {
+                // First time user
+                const name = "Estudiante"; // Could prompt for name
+                userData.name = name;
+                saveUserData();
+            }
+        }
+
+        function saveUserData() {
+            localStorage.setItem('educarUserData', JSON.stringify(userData));
+        }
+
+        function updateUI() {
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userInitial').textContent = userData.name[0].toUpperCase();
+            document.getElementById('profileInitial').textContent = userData.name[0].toUpperCase();
+            document.getElementById('profileName').textContent = userData.name;
+            document.getElementById('userXP').textContent = userData.xp + ' XP';
+            document.getElementById('userStreak').textContent = userData.streak + ' días';
+            document.getElementById('streakDays').textContent = userData.streak;
+            document.getElementById('userLevel').textContent = userData.level;
+            document.getElementById('profileLevel').textContent = 'Nivel: ' + userData.level;
+            document.getElementById('profileXP').textContent = userData.xp;
+            document.getElementById('profileStreak').textContent = userData.streak;
+            
+            // Calculate level XP
+            const levelXP = userData.xp % 1000;
+            document.getElementById('levelXP').textContent = levelXP;
+            
+            // Update progress
+            const overallProgress = Math.min((userData.xp / 5000) * 100, 100);
+            document.getElementById('overallProgress').style.width = overallProgress + '%';
+            document.getElementById('overallPercentage').textContent = Math.round(overallProgress);
+            
+            // Update achievements count
+            const unlockedCount = userData.achievements.length;
+            document.getElementById('achievementCount').textContent = unlockedCount;
+            
+            // Update level based on XP
+            updateLevel();
+            
+            // Render achievements
+            renderAchievements();
+        }
+
+        function updateLevel() {
+            if (userData.xp >= 5000) userData.level = "Maestro";
+            else if (userData.xp >= 3000) userData.level = "Experto";
+            else if (userData.xp >= 1500) userData.level = "Intermedio";
+            else userData.level = "Aprendiz";
+        }
+
+        function addXP(amount) {
+            userData.xp += amount;
+            saveUserData();
+            updateUI();
+            showToast(`+${amount} XP ganados! 🌟`, 'success');
+            
+            // Check for achievements
+            checkAchievements();
+        }
+
+        function checkAchievements() {
+            // First lesson
+            if (userData.gamesPlayed.length >= 1 && !userData.achievements.includes(0)) {
+                unlockAchievement(0);
+            }
+            
+            // 1000 XP
+            if (userData.xp >= 1000 && !userData.achievements.includes(2)) {
+                unlockAchievement(2);
+            }
+            
+            // Complete all games
+            const allGames = ['quiz', 'memory', 'simulator', 'association', 'exam'];
+            const playedAll = allGames.every(game => userData.gamesPlayed.includes(game));
+            if (playedAll && !userData.achievements.includes(11)) {
+                unlockAchievement(11);
+            }
+        }
+
+        function unlockAchievement(index) {
+            if (!userData.achievements.includes(index)) {
+                userData.achievements.push(index);
+                achievements[index].unlocked = true;
+                saveUserData();
+                showToast(`¡Logro desbloqueado! ${achievements[index].title} ${achievements[index].icon}`, 'success');
+                renderAchievements();
+            }
+        }
+
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = achievements.map((ach, index) => `
+                <div class="achievement ${userData.achievements.includes(index) ? '' : 'locked'}">
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <h4>${ach.title}</h4>
+                    <p>${ach.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastPlayed = userData.lastPlayed;
+            
+            if (lastPlayed) {
+                const lastDate = new Date(lastPlayed).toDateString();
+                const yesterday = new Date(Date.now() - 86400000).toDateString();
+                
+                if (lastDate === today) {
+                    // Already played today
+                } else if (lastDate === yesterday) {
+                    // Consecutive day
+                    userData.streak++;
+                    userData.lastPlayed = today;
+                    saveUserData();
+                } else {
+                    // Streak broken
+                    userData.streak = 1;
+                    userData.lastPlayed = today;
+                    saveUserData();
+                }
+            } else {
+                userData.streak = 1;
+                userData.lastPlayed = today;
+                saveUserData();
+            }
+            
+            // Check 7-day streak achievement
+            if (userData.streak >= 7 && !userData.achievements.includes(1)) {
+                unlockAchievement(1);
+            }
+            
+            updateUI();
+        }
+
+        function checkOnlineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            
+            function updateStatus() {
+                if (!navigator.onLine) {
+                    indicator.classList.add('show');
+                } else {
+                    indicator.classList.remove('show');
+                }
+            }
+            
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+            updateStatus();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==================== NAVIGATION ====================
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = ['dashboard', 'quizGame', 'memoryGame', 'simulatorGame', 'associationGame', 'studyLibrary', 'profileStats', 'examSimulator'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        function backToDashboard() {
+            showSection('dashboard');
+            
+            // Reset timers
+            if (memoryInterval) clearInterval(memoryInterval);
+            if (associationInterval) clearInterval(associationInterval);
+            if (examInterval) clearInterval(examInterval);
+        }
+
+        function showProfile() {
+            showSection('profileStats');
+        }
+
+        function showLibrary() {
+            showSection('studyLibrary');
+            renderLibrary();
+            
+            if (!userData.gamesPlayed.includes('library')) {
+                userData.gamesPlayed.push('library');
+                saveUserData();
+            }
+        }
+
+        function renderLibrary() {
+            const content = document.getElementById('libraryContent');
+            content.innerHTML = chapters.map((chapter, index) => `
+                <div class="chapter">
+                    <div class="chapter-title" onclick="toggleChapter(${index})">
+                        <i class="fas fa-book-open"></i>
+                        <span>${chapter.title}</span>
+                    </div>
+                    <div class="chapter-content" id="chapter-${index}">
+                        ${chapter.content}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleChapter(index) {
+            const content = document.getElementById(`chapter-${index}`);
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        }
+
+        function searchLibrary() {
+            const query = document.getElementById('librarySearch').value.toLowerCase();
+            const chapterElements = document.querySelectorAll('.chapter');
+            
+            chapterElements.forEach(chapter => {
+                const text = chapter.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    chapter.style.display = 'block';
+                } else {
+                    chapter.style.display = 'none';
+                }
+            });
+        }
+
+        // ==================== QUIZ GAME ====================
+        function startQuiz() {
+            showSection('quizGame');
+            currentQuizIndex = 0;
+            currentLives = 3;
+            currentScore = 0;
+            
+            // Shuffle questions
+            quizQuestions.sort(() => Math.random() - 0.5);
+            
+            loadQuestion();
+            
+            if (!userData.gamesPlayed.includes('quiz')) {
+                userData.gamesPlayed.push('quiz');
+                saveUserData();
+            }
+        }
+
+        function loadQuestion() {
+            if (currentQuizIndex >= 10 || currentLives === 0) {
+                endQuiz();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuizIndex];
+            document.getElementById('questionNumber').textContent = `Pregunta ${currentQuizIndex + 1} de 10`;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('quizScore').textContent = currentScore;
+            
+            // Render options
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = question.options.map((option, index) => `
+                <div class="option" onclick="selectOption(${index})">${option}</div>
+            `).join('');
+            
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('nextQuestionBtn').style.display = 'none';
+            
+            // Update lives
+            updateLives();
+        }
+
+        function updateLives() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart, index) => {
+                if (index >= currentLives) {
+                    heart.classList.add('lost');
+                } else {
+                    heart.classList.remove('lost');
+                }
+            });
+        }
+
+        function selectOption(index) {
+            const question = quizQuestions[currentQuizIndex];
+            const options = document.querySelectorAll('.option');
+            
+            // Disable all options
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (index === question.correct) {
+                options[index].classList.add('correct');
+                currentScore += 10;
+                addXP(5);
+                showToast('¡Correcto! +10 pts', 'success');
+            } else {
+                options[index].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                currentLives--;
+                updateLives();
+                showToast('Incorrecto. -1 vida', 'error');
+            }
+            
+            // Show explanation
+            const explanation = document.getElementById('explanation');
+            explanation.textContent = question.explanation;
+            explanation.classList.add('show');
+            
+            document.getElementById('nextQuestionBtn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            loadQuestion();
+        }
+
+        function endQuiz() {
+            const finalScore = currentScore;
+            const percentage = (finalScore / 100) * 100;
+            
+            addXP(finalScore);
+            
+            if (percentage === 100 && !userData.achievements.includes(8)) {
+                unlockAchievement(8);
+            }
+            
+            document.getElementById('quizOptions').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                        ${currentLives > 0 ? '🎉 ¡Felicidades!' : '💪 Buen intento!'}
+                    </h2>
+                    <p style="font-size: 1.5rem; margin-bottom: 1rem;">
+                        Puntuación Final: <strong>${finalScore}/100</strong>
+                    </p>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        ${percentage >= 70 ? '¡Excelente trabajo! Dominas el material.' : 'Sigue estudiando, ¡vas por buen camino!'}
+                    </p>
+                    <button class="btn btn-primary" onclick="startQuiz()">
+                        <i class="fas fa-redo"></i> Jugar de Nuevo
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('questionText').textContent = '';
+            document.getElementById('questionNumber').textContent = 'Quiz Completado';
+            document.getElementById('nextQuestionBtn').style.display = 'none';
+        }
+
+        // ==================== MEMORY GAME ====================
+        function startMemory() {
+            showSection('memoryGame');
+            memoryFlipped = [];
+            memoryMatched = [];
+            memoryMoves = 0;
+            memoryTimer = 0;
+            
+            // Shuffle cards
+            const shuffled = [...memoryCards].sort(() => Math.random() - 0.5);
+            
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = shuffled.map((card, index) => `
+                <div class="memory-card" onclick="flipCard(${index})" data-id="${card.id}">
+                    <div class="card-front">🚗</div>
+                    <div class="card-back">
+                        <div class="card-back-icon">${card.icon}</div>
+                        <div class="card-back-text">${card.text}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('memoryTime').textContent = '0:00';
+            document.getElementById('memoryMoves').textContent = '0';
+            
+            // Start timer
+            memoryInterval = setInterval(() => {
+                memoryTimer++;
+                const minutes = Math.floor(memoryTimer / 60);
+                const seconds = memoryTimer % 60;
+                document.getElementById('memoryTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+            
+            if (!userData.gamesPlayed.includes('memory')) {
+                userData.gamesPlayed.push('memory');
+                saveUserData();
+            }
+        }
+
+        function flipCard(index) {
+            const cards = document.querySelectorAll('.memory-card');
+            const card = cards[index];
+            
+            if (memoryFlipped.length >= 2 || card.classList.contains('flipped') || memoryMatched.includes(index)) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            memoryFlipped.push(index);
+            
+            if (memoryFlipped.length === 2) {
+                memoryMoves++;
+                document.getElementById('memoryMoves').textContent = memoryMoves;
+                
+                const card1 = cards[memoryFlipped[0]];
+                const card2 = cards[memoryFlipped[1]];
+                
+                if (card1.dataset.id === card2.dataset.id) {
+                    // Match!
+                    memoryMatched.push(memoryFlipped[0], memoryFlipped[1]);
+                    memoryFlipped = [];
+                    
+                    addXP(5);
+                    
+                    if (memoryMatched.length === memoryCards.length) {
+                        endMemory();
+                    }
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        memoryFlipped = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        function endMemory() {
+            clearInterval(memoryInterval);
+            addXP(30);
+            
+            if (memoryMoves <= memoryCards.length / 2 && !userData.achievements.includes(4)) {
+                unlockAchievement(4);
+            }
+            
+            showToast(`¡Completado en ${memoryMoves} movimientos! +30 XP`, 'success');
+        }
+
+        // ==================== SIMULATOR GAME ====================
+        function startSimulator() {
+            showSection('simulatorGame');
+            currentScenarioIndex = 0;
+            scenarioScore = 0;
+            
+            loadScenario();
+            
+            if (!userData.gamesPlayed.includes('simulator')) {
+                userData.gamesPlayed.push('simulator');
+                saveUserData();
+            }
+        }
+
+        function loadScenario() {
+            if (currentScenarioIndex >= scenarios.length) {
+                endSimulator();
+                return;
+            }
+            
+            const scenario = scenarios[currentScenarioIndex];
+            document.getElementById('scenarioNumber').textContent = currentScenarioIndex + 1;
+            document.getElementById('scenarioTitle').textContent = scenario.title;
+            document.getElementById('scenarioDescription').textContent = scenario.description;
+            
+            const optionsContainer = document.getElementById('scenarioOptions');
+            optionsContainer.innerHTML = scenario.options.map((option, index) => `
+                <div class="option" onclick="selectScenarioOption(${index})">${option}</div>
+            `).join('');
+            
+            document.getElementById('scenarioExplanation').classList.remove('show');
+            document.getElementById('nextScenarioBtn').style.display = 'none';
+        }
+
+        function selectScenarioOption(index) {
+            const scenario = scenarios[currentScenarioIndex];
+            const options = document.querySelectorAll('#scenarioOptions .option');
+            
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (index === scenario.correct) {
+                options[index].classList.add('correct');
+                scenarioScore += 20;
+                addXP(14);
+                showToast('¡Decisión correcta! +20 pts', 'success');
+            } else {
+                options[index].classList.add('incorrect');
+                options[scenario.correct].classList.add('correct');
+                showToast('Revisa la explicación', 'info');
+            }
+            
+            const explanation = document.getElementById('scenarioExplanation');
+            explanation.textContent = scenario.explanation;
+            explanation.classList.add('show');
+            
+            document.getElementById('nextScenarioBtn').style.display = 'block';
+        }
+
+        function nextScenario() {
+            currentScenarioIndex++;
+            loadScenario();
+        }
+
+        function endSimulator() {
+            addXP(scenarioScore);
+            
+            document.getElementById('scenarioOptions').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                        🎯 ¡Simulación Completada!
+                    </h2>
+                    <p style="font-size: 1.5rem; margin-bottom: 1rem;">
+                        Puntuación: <strong>${scenarioScore}/100</strong>
+                    </p>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        ${scenarioScore >= 80 ? '¡Excelente toma de decisiones!' : '¡Sigue practicando!'}
+                    </p>
+                    <button class="btn btn-primary" onclick="startSimulator()">
+                        <i class="fas fa-redo"></i> Intentar de Nuevo
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('scenarioTitle').textContent = '';
+            document.getElementById('scenarioDescription').textContent = '';
+            document.getElementById('nextScenarioBtn').style.display = 'none';
+        }
+
+        // ==================== ASSOCIATION GAME ====================
+        function startAssociation() {
+            showSection('associationGame');
+            associationSelected = { left: null, right: null };
+            associationMatched = [];
+            associationScore = 0;
+            associationTimeLeft = 60;
+            
+            // Shuffle associations
+            const shuffledLeft = [...associations].sort(() => Math.random() - 0.5);
+            const shuffledRight = [...associations].map(a => ({ ...a })).sort(() => Math.random() - 0.5);
+            
+            document.getElementById('associationLeft').innerHTML = shuffledLeft.map((item, index) => `
+                <div class="association-item" onclick="selectLeft(${item.id}, ${index})" id="left-${index}">
+                    ${item.left}
+                </div>
+            `).join('');
+            
+            document.getElementById('associationRight').innerHTML = shuffledRight.map((item, index) => `
+                <div class="association-item" onclick="selectRight(${item.id}, ${index})" id="right-${index}">
+                    ${item.right}
+                </div>
+            `).join('');
+            
+            document.getElementById('associationScore').textContent = '0';
+            document.getElementById('associationTime').textContent = '60';
+            
+            // Start timer
+            associationInterval = setInterval(() => {
+                associationTimeLeft--;
+                document.getElementById('associationTime').textContent = associationTimeLeft;
+                
+                if (associationTimeLeft <= 0) {
+                    endAssociation();
+                }
+            }, 1000);
+            
+            if (!userData.gamesPlayed.includes('association')) {
+                userData.gamesPlayed.push('association');
+                saveUserData();
+            }
+        }
+
+        function selectLeft(id, index) {
+            if (associationMatched.includes(`left-${index}`)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('#associationLeft .association-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            document.getElementById(`left-${index}`).classList.add('selected');
+            associationSelected.left = { id, index };
+            
+            checkAssociationMatch();
+        }
+
+        function selectRight(id, index) {
+            if (associationMatched.includes(`right-${index}`)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('#associationRight .association-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            document.getElementById(`right-${index}`).classList.add('selected');
+            associationSelected.right = { id, index };
+            
+            checkAssociationMatch();
+        }
+
+        function checkAssociationMatch() {
+            if (associationSelected.left && associationSelected.right) {
+                if (associationSelected.left.id === associationSelected.right.id) {
+                    // Match!
+                    const leftEl = document.getElementById(`left-${associationSelected.left.index}`);
+                    const rightEl = document.getElementById(`right-${associationSelected.right.index}`);
+                    
+                    leftEl.classList.remove('selected');
+                    leftEl.classList.add('matched');
+                    rightEl.classList.remove('selected');
+                    rightEl.classList.add('matched');
+                    
+                    associationMatched.push(`left-${associationSelected.left.index}`, `right-${associationSelected.right.index}`);
+                    associationScore++;
+                    
+                    document.getElementById('associationScore').textContent = associationScore;
+                    addXP(8);
+                    
+                    if (associationScore === associations.length) {
+                        endAssociation();
+                    }
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        document.querySelectorAll('.association-item.selected').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                    }, 500);
+                }
+                
+                associationSelected = { left: null, right: null };
+            }
+        }
+
+        function endAssociation() {
+            clearInterval(associationInterval);
+            const timeBonus = associationTimeLeft * 2;
+            addXP(40 + timeBonus);
+            
+            if (associationTimeLeft >= 30 && associationScore === associations.length && !userData.achievements.includes(10)) {
+                unlockAchievement(10);
+            }
+            
+            showToast(`¡Completado! +${40 + timeBonus} XP`, 'success');
+            
+            setTimeout(() => {
+                backToDashboard();
+            }, 2000);
+        }
+
+        // ==================== EXAM SIMULATOR ====================
+        function startExam() {
+            showSection('examSimulator');
+            currentExamIndex = 0;
+            examAnswers = [];
+            examTimeLeft = 2400; // 40 minutes
+            
+            // Select 40 random questions
+            const examQuestions = [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, 40);
+            
+            loadExamQuestion();
+            
+            // Start timer
+            examInterval = setInterval(() => {
+                examTimeLeft--;
+                const minutes = Math.floor(examTimeLeft / 60);
+                const seconds = examTimeLeft % 60;
+                document.getElementById('examTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (examTimeLeft <= 0) {
+                    endExam();
+                }
+            }, 1000);
+            
+            if (!userData.gamesPlayed.includes('exam')) {
+                userData.gamesPlayed.push('exam');
+                saveUserData();
+            }
+        }
+
+        function loadExamQuestion() {
+            if (currentExamIndex >= 40) {
+                endExam();
+                return;
+            }
+            
+            const question = quizQuestions[currentExamIndex];
+            document.getElementById('examQuestionNumber').textContent = `Pregunta ${currentExamIndex + 1} de 40`;
+            document.getElementById('examQuestionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('examOptions');
+            optionsContainer.innerHTML = question.options.map((option, index) => `
+                <div class="option" onclick="selectExamOption(${index})">${option}</div>
+            `).join('');
+        }
+
+        function selectExamOption(index) {
+            examAnswers[currentExamIndex] = index;
+            
+            // Highlight selected
+            const options = document.querySelectorAll('#examOptions .option');
+            options.forEach((opt, i) => {
+                if (i === index) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+        }
+
+        function nextExamQuestion() {
+            if (examAnswers[currentExamIndex] === undefined) {
+                showToast('Por favor selecciona una respuesta', 'error');
+                return;
+            }
+            
+            currentExamIndex++;
+            loadExamQuestion();
+        }
+
+        function endExam() {
+            clearInterval(examInterval);
+            
+            let correctCount = 0;
+            quizQuestions.slice(0, 40).forEach((q, i) => {
+                if (examAnswers[i] === q.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const percentage = (correctCount / 40) * 100;
+            const passed = percentage >= 70;
+            
+            if (passed) {
+                userData.examsPassed++;
+                addXP(100);
+            } else {
+                addXP(50);
+            }
+            
+            if (!userData.achievements.includes(7)) {
+                unlockAchievement(7);
+            }
+            
+            if (percentage === 100 && !userData.achievements.includes(8)) {
+                unlockAchievement(8);
+            }
+            
+            document.getElementById('examOptions').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="color: ${passed ? 'var(--success)' : 'var(--danger)'}; margin-bottom: 1rem;">
+                        ${passed ? '✅ ¡APROBADO!' : '❌ No Aprobado'}
+                    </h2>
+                    <p style="font-size: 2rem; margin-bottom: 1rem;">
+                        ${correctCount}/40 correctas
+                    </p>
+                    <p style="font-size: 1.5rem; margin-bottom: 2rem;">
+                        ${percentage.toFixed(1)}%
+                    </p>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        ${passed ? '¡Felicidades! Estás listo para el examen oficial.' : 'Sigue estudiando. Necesitas 70% para aprobar.'}
+                    </p>
+                    <button class="btn btn-primary" onclick="startExam()">
+                        <i class="fas fa-redo"></i> Intentar de Nuevo
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('examQuestionText').textContent = '';
+            document.getElementById('examQuestionNumber').textContent = 'Examen Completado';
+            
+            saveUserData();
+        }
+
+        // Initialize app
+        window.onload = init;
+    </script>
+</body>
+</html>
